@@ -347,7 +347,6 @@ def handle():
         mRend.clear()
         mRend.qtext(-.5,-.5,"Paused",.05)
         mRend.handle(False,shader.shader)
-        del(dels)
     mRend.clear()
     if btime != 0:
         ttime += pgame.delta

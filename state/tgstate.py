@@ -15,12 +15,8 @@ import math
 
 FLOOR = -1
 BUFF = .006
-level = 0
 wide = 2
 high = 2
-nState = None
-cScore = 0
-
 class obect():
     def __init__(self,tex,size,pos,vel=[0,0,0],sol=False):
         self.pos = [pos[0],pos[1],0]
@@ -213,9 +209,13 @@ def onLeave():
     active = False
 
 def init():
-    global active, black, initd, objs, bgs, score, paused, btime, ttime, target, nex, cMus
+    global active, cScore, nState, level, finL, black, initd, objs, bgs, score, paused, btime, ttime, target, nex, cMus
     cMus = None
+    nState = None
+    cScore = 0
+    level =0
     nex = False
+    finL = False
     target = 0
     btime = 0
     ttime = 0
@@ -239,11 +239,12 @@ def init():
 from os import path
 
 def loadLevel(level):
-    global pl, objs, bgs, wide, high, cMus, score
+    global pl, objs, bgs, wide, high, cMus, score, finL
     score = cScore
     objs=[]
     bgs=[]
     if not path.exists(level):
+        finL = True
         loadLevel("fin.lvl")
         return
     fin = open(level)
@@ -290,8 +291,13 @@ def handle():
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_ESCAPE:
                 paused = not paused
+                if finL:
+                    pgame.endGame()
             elif event.key==pygame.K_r:
-                loadLevel('level'+str(level)+'.lvl')
+                if finL:
+                    init()
+                    return
+                loadLevel('level'+(str(level) if level>0 else '')+'.lvl')
     keys = pygame.key.get_pressed()
     if not paused:
         pl.update()
